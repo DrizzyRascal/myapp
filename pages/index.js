@@ -3,27 +3,59 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import material, { FormControlLabel } from '@mui/material'
 import Slide from '@mui/material/Slide';
-import React, {useEffect, useState} from 'react';
+import {useState, useEffect, useMemo} from 'react';
+
 
 export default function Home() {
+  const [descript, setDescript] = useState(0);
+  const [index, setIndex] = useState(0);
+// memoize the array and dont recreate it on each render
+const textArray = useMemo(
+  () => ["digital", "development", "graphics", "blog"],
+  []
+);
 
-const [Index, setIndex] = useState(0);
+const description = useMemo(
+  () => [<Slide key="1" direction="right" in={true} mountOnEnter unmountOnExit><p>discover tyty digital and what it can do for you...</p></Slide>,
+  <Slide key="2" direction="right" in={true} mountOnEnter unmountOnExit><p>explore what tyty web developent can achieve...</p></Slide>,
+   <Slide key="3" direction="right" in={true} mountOnEnter unmountOnExit><p>take centre-stage with beautiful intuative designs...</p></Slide>,
+   <Slide key="4" direction="right" in={true} mountOnEnter unmountOnExit><p>weekly updates into the world of tyty digital...</p></Slide>],
+  []
+);
+
+
+const desc = useMemo(() => {
+  return description[descript];
+}, [descript, description]);
 
 useEffect(() => {
-  const intervalID = setTimeout(() =>  {
-      setIndex((Index) => prevIndex+1)
+  // setInterval, not the setTimeout
+  const intervalId = setInterval(() => {
+    // Index will go up but % will cut it down
+    setDescript((prev) => (prev + 1) % description.length);
   }, 3000);
 
-  return () => clearInterval(intervalID);
-}, []);
+  return () => clearInterval(intervalId);
+}, [description]);
 
-const textArray = [
-  "digital",
-  "development",
-  "graphics",
-  "blog"
-]
 
+
+
+const text = useMemo(() => {
+  return textArray[index];
+}, [index, textArray]);
+// Will be recalculated when index or textArray changed
+
+
+useEffect(() => {
+  // setInterval, not the setTimeout
+  const intervalId = setInterval(() => {
+    // Index will go up but % will cut it down
+    setIndex((prev) => (prev + 1) % textArray.length);
+  }, 3000);
+
+  return () => clearInterval(intervalId);
+}, [textArray]);
 
 
 
@@ -37,21 +69,25 @@ const textArray = [
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          This is <a href="https://nextjs.org">tyty<span> {textArray[Index]}</span></a>
+          This is <a style={{color: "#16a085"}} href="https://nextjs.org">
+          tyty <span> 
+          {text}
+          </span></a>
         </h1>
 
         <p className={styles.description}>
-          you are just getting started...
+          {desc}
+          
         </p>
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>About &rarr;</h2>
+            <h2 style={{color: "#16a085"}}>About &rarr;</h2>
             <p>Discover tyty digital and what it can do for you.</p>
           </a>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Blog &rarr;</h2>
+            <h2 style={{color: "#16a085"}}>Blog &rarr;</h2>
             <p>Weekly updates into the world of tyty digital.</p>
           </a>
 
@@ -59,7 +95,7 @@ const textArray = [
             href="https://github.com/vercel/next.js/tree/canary/examples"
             className={styles.card}
           >
-            <h2>Web Development &rarr;</h2>
+            <h2 style={{color: "#16a085"}}>Web Development &rarr;</h2>
             <p>Explore what tyty web-development can achieve.</p>
           </a>
 
@@ -67,7 +103,7 @@ const textArray = [
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             className={styles.card}
           >
-            <h2>Graphic Design &rarr;</h2>
+            <h2 style={{color: "#16a085"}}>Graphic Design &rarr;</h2>
             <p>
               Take centre-stage with beautiful intuative designs.
             </p>
@@ -81,9 +117,8 @@ const textArray = [
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
           <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            <Image src="/tyty_logo-01.png" alt="tyty Logo" width={75} height={75} />
           </span>
         </a>
       </footer>
